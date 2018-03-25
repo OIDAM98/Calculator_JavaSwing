@@ -72,9 +72,7 @@ public class Calculator {
             double n2 = numbers.pop();
             numbers.push(makeEvaluation(op, n1, n2));
         }
-        if(!ops.empty()){
-            numbers.push(makeEvaluation(ops.pop(), numbers.pop()));
-        }
+
         return numbers.pop();
     }
 
