@@ -17,7 +17,7 @@ public class GUI extends JFrame{
     StringBuilder numberStr;
     private final int sButton = 45;
     List<JButton> buttons;
-    private static ActionListener actionButtons;
+    private static ActionListener actionNumbers;
     private static HashMap<Integer, String> opMap;
 
     public GUI(){
@@ -64,7 +64,7 @@ public class GUI extends JFrame{
         opScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         opScreen.setEditable(false);
         opScreen.setPreferredSize(new Dimension(300, 25));
-        opScreen.setFont(new Font("Courier new", Font.TRUETYPE_FONT,16));
+        opScreen.setFont(new Font("Courier new", Font.ITALIC,16));
 
         resultScreen = new JTextField();
         resultScreen.setHorizontalAlignment(JTextField.RIGHT);
@@ -73,7 +73,7 @@ public class GUI extends JFrame{
         resultScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         resultScreen.setEditable(false);
         resultScreen.setPreferredSize(new Dimension(300, 50));
-        resultScreen.setFont(new Font("Courier new", Font.TRUETYPE_FONT,20));
+        resultScreen.setFont(new Font("Courier new", Font.BOLD,20));
 
         //topresultScreen.setFont(new Font("Arial", 18));
 
@@ -85,7 +85,7 @@ public class GUI extends JFrame{
             Generating Action Listeners for each type of JButton
          */
 
-        actionButtons = new ActionListener() {
+        actionNumbers = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton pressed = (JButton) e.getSource();
@@ -98,7 +98,12 @@ public class GUI extends JFrame{
         ActionListener actionDot = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberStr.append(".");
+                if(numberStr.length() != 0) {
+                    numberStr.append(".");
+                }
+                else{
+                    numberStr.append("0.");
+                }
                 resultScreen.setText(numberStr.toString());
             }
         };
@@ -106,13 +111,22 @@ public class GUI extends JFrame{
         ActionListener actionEquals = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                operation.append(numberStr);
-                numberStr = new StringBuilder();
-                numberStr.append(calculator.makeOperation(operation.toString()));
-                opScreen.setText("");
-                resultScreen.setText(numberStr.toString());
-                operation = new StringBuilder();
-                numberStr = new StringBuilder();
+                if(numberStr.length() != 0) {
+                    operation.append(numberStr);
+                    numberStr = new StringBuilder();
+                    if (!calculator.endsWithOperator(operation.toString())) {
+                        try {
+                            numberStr.append(calculator.makeOperation(operation.toString()));
+                            opScreen.setText("");
+                            resultScreen.setText(numberStr.toString());
+                            operation = new StringBuilder();
+                            numberStr = new StringBuilder();
+                        } catch (ArithmeticException ex) {
+                            operation = new StringBuilder();
+                            resultScreen.setText(ex.getMessage());
+                        }
+                    }
+                }
 
             }
         };
@@ -144,7 +158,7 @@ public class GUI extends JFrame{
         zero.setSize(sButton, sButton);
         zero.setForeground(Color.WHITE);
         zero.setBackground(Color.GRAY);
-        zero.addActionListener(actionButtons);
+        zero.addActionListener(actionNumbers);
         buttons.add(zero);
 
         JButton dot = new JButton(".");
@@ -174,6 +188,23 @@ public class GUI extends JFrame{
         equals.setPreferredSize(new Dimension(300, 45));
         equals.addActionListener(actionEquals);
         cp.add(equals, BorderLayout.SOUTH);
+
+
+        String lf = "";
+        lf = UIManager.getSystemLookAndFeelClassName();
+        //lf = UIManager.getCrossPlatformLookAndFeelClassName();
+        try {
+            UIManager.setLookAndFeel(lf);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void generateMap(){
@@ -191,7 +222,7 @@ public class GUI extends JFrame{
             button.setSize(sButton, sButton);
             button.setForeground(Color.WHITE);
             button.setBackground(Color.GRAY);
-            button.addActionListener(actionButtons);
+            button.addActionListener(actionNumbers);
             toRet.add(button);
         }
         return toRet;
@@ -203,7 +234,10 @@ public class GUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 JButton pressed = (JButton) e.getSource();
                 String op = pressed.getText();
-                 if(numberStr.length() != 0) {
+                if(numberStr.toString().equals("0.")){
+                    numberStr.append("0");
+                }
+                if(numberStr.length() != 0) {
                     operation.append(numberStr);
                     operation.append(" ");
                     operation.append(op);
