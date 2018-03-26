@@ -154,7 +154,7 @@ public class Calculator {
     }
 
     private double divide(double n1, double n2) throws ArithmeticException{
-        if(n2 == 0.0) throw new ArithmeticException();
+        if(n2 == 0.0) throw new ArithmeticException("Result is undefined!");
         return n1 / n2;
     }
 

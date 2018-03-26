@@ -20,6 +20,7 @@ public class GUI extends JFrame{
     private static HashMap<Integer, String> opMap;
     private HistoryPanel log;
     private boolean madeOp = false;
+    private boolean dividedByZero = false;
 
     public GUI(){
         setTitle("Calculator");
@@ -99,6 +100,11 @@ public class GUI extends JFrame{
                     madeOp = false;
                     numberStr = new StringBuilder();
                 }
+                if(dividedByZero){
+                    opScreen.setText("");
+                    numberStr = new StringBuilder();
+                    dividedByZero = false;
+                }
                 JButton pressed = (JButton) e.getSource();
                 String text = pressed.getText();
                 numberStr.append(text);
@@ -136,9 +142,9 @@ public class GUI extends JFrame{
                             log.updateLog();
                             operation = new StringBuilder();
                             madeOp = true;
-                            //numberStr = new StringBuilder();
                         } catch (ArithmeticException ex) {
                             operation = new StringBuilder();
+                            dividedByZero = true;
                             resultScreen.setText(ex.getMessage());
                         }
                     }
