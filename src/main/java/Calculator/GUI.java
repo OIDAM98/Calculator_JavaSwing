@@ -104,13 +104,15 @@ public class GUI extends JFrame{
         ActionListener actionDot = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(numberStr.length() != 0) {
-                    numberStr.append(".");
+                if(!numberStr.toString().contains(".")){
+                    if(numberStr.length() != 0) {
+                        numberStr.append(".");
+                    }
+                    else{
+                        numberStr.append("0.");
+                    }
+                    resultScreen.setText(numberStr.toString());
                 }
-                else{
-                    numberStr.append("0.");
-                }
-                resultScreen.setText(numberStr.toString());
             }
         };
 
