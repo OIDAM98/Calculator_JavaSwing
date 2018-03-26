@@ -2,6 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="Calculator_JavaSwing_main" target="1.8" />
+      <module name="Calculator_JavaSwing_test" target="1.8" />
       <module name="Calculator_JavaSwingVC_main" target="1.8" />
       <module name="Calculator_JavaSwingVC_test" target="1.8" />
       <module name="Calulculator_Test_main" target="1.8" />

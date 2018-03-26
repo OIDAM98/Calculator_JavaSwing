@@ -26,6 +26,10 @@ public class GUI extends JFrame{
         setLocation(600,200);
         setMinimumSize(new Dimension(300, 425));
 
+        /*
+            Initializing Panels
+         */
+
         Container cp = getContentPane();
         cp.setBackground(Color.BLACK);
         cp.setLayout(new BorderLayout(5, 5));
@@ -34,13 +38,17 @@ public class GUI extends JFrame{
         JPanel north = new JPanel();
         north.setLayout(new BorderLayout());
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 3, 5, 5));
-        buttonPanel.setBackground(Color.BLACK);
+        JPanel numPanel = new JPanel();
+        numPanel.setLayout(new GridLayout(4, 3, 5, 5));
+        numPanel.setBackground(Color.BLACK);
 
         JPanel opPanel = new JPanel();
         opPanel.setLayout(new GridLayout(4, 1, 5, 5));
         opPanel.setBackground(Color.BLACK);
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BorderLayout(5, 5));
+        buttonsPanel.setBackground(Color.BLACK);
 
         /*
             Initializing attributes
@@ -74,8 +82,6 @@ public class GUI extends JFrame{
         resultScreen.setEditable(false);
         resultScreen.setPreferredSize(new Dimension(300, 50));
         resultScreen.setFont(new Font("Courier new", Font.BOLD,20));
-
-        //topresultScreen.setFont(new Font("Arial", 18));
 
         north.add(opScreen, BorderLayout.NORTH);
         north.add(resultScreen, BorderLayout.SOUTH);
@@ -154,11 +160,7 @@ public class GUI extends JFrame{
         erase.addActionListener(actionErase);
         buttons.add(erase);
 
-        JButton zero = new JButton("0");
-        zero.setSize(sButton, sButton);
-        zero.setForeground(Color.WHITE);
-        zero.setBackground(Color.GRAY);
-        zero.addActionListener(actionNumbers);
+        JButton zero = generateButton(0);
         buttons.add(zero);
 
         JButton dot = new JButton(".");
@@ -170,7 +172,7 @@ public class GUI extends JFrame{
 
         for(JButton addy : buttons){
             System.out.println(addy.getText());
-            buttonPanel.add(addy);
+            numPanel.add(addy);
         }
 
         buttons = generateOperations();
@@ -180,7 +182,7 @@ public class GUI extends JFrame{
         }
 
         cp.add(opPanel, BorderLayout.EAST);
-        cp.add(buttonPanel, BorderLayout.CENTER);
+        cp.add(numPanel, BorderLayout.CENTER);
 
         JButton equals = new JButton("=");
         equals.setForeground(Color.WHITE);
@@ -190,20 +192,6 @@ public class GUI extends JFrame{
         cp.add(equals, BorderLayout.SOUTH);
 
 
-        String lf = "";
-        lf = UIManager.getSystemLookAndFeelClassName();
-        //lf = UIManager.getCrossPlatformLookAndFeelClassName();
-        try {
-            UIManager.setLookAndFeel(lf);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -217,15 +205,28 @@ public class GUI extends JFrame{
 
     private List<JButton> generateButtons(){
         List<JButton> toRet = new ArrayList<>();
-        for(int i = 1; i <= 9; i++){
-            JButton button = new JButton( String.valueOf(i) );
-            button.setSize(sButton, sButton);
-            button.setForeground(Color.WHITE);
-            button.setBackground(Color.GRAY);
-            button.addActionListener(actionNumbers);
+        for(int i = 7; i <= 9; i++){
+            JButton button = generateButton(i);
+            toRet.add(button);
+        }
+        for(int i = 4; i <= 6; i++){
+            JButton button = generateButton(i);
+            toRet.add(button);
+        }
+        for(int i = 1; i <= 3; i++){
+            JButton button = generateButton(i);
             toRet.add(button);
         }
         return toRet;
+    }
+
+    private JButton generateButton(int n){
+        JButton button = new JButton( String.valueOf(n) );
+        button.setSize(sButton, sButton);
+        button.setForeground(Color.WHITE);
+        button.setBackground(Color.GRAY);
+        button.addActionListener(actionNumbers);
+        return button;
     }
 
     private List<JButton> generateOperations(){
