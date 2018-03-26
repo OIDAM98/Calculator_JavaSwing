@@ -2,23 +2,23 @@ package Calculator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class GUI extends JFrame{
 
-    JTextField resultScreen;
-    JTextField opScreen;
-    Calculator calculator;
-    StringBuilder operation;
-    StringBuilder numberStr;
+    private JTextField resultScreen;
+    private JTextField opScreen;
+    private Calculator calculator;
+    private StringBuilder operation;
+    private StringBuilder numberStr;
     private final int sButton = 45;
-    List<JButton> buttons;
+    private List<JButton> buttons;
     private static ActionListener actionNumbers;
     private static HashMap<Integer, String> opMap;
+    private HistoryPanel log;
 
     public GUI(){
         setTitle("Calculator");
@@ -85,7 +85,7 @@ public class GUI extends JFrame{
 
         north.add(opScreen, BorderLayout.NORTH);
         north.add(resultScreen, BorderLayout.SOUTH);
-        cp.add(north, BorderLayout.NORTH);
+        buttonsPanel.add(north, BorderLayout.NORTH);
 
         /*
             Generating Action Listeners for each type of JButton
@@ -127,6 +127,8 @@ public class GUI extends JFrame{
                             numberStr.append(calculator.makeOperation(operation.toString()));
                             opScreen.setText("");
                             resultScreen.setText(numberStr.toString());
+                            log.addOperation(calculator.returnFormattedExp(operation.toString()), Double.parseDouble(numberStr.toString()));
+                            log.updateLog();
                             operation = new StringBuilder();
                             numberStr = new StringBuilder();
                         } catch (ArithmeticException ex) {
@@ -150,8 +152,10 @@ public class GUI extends JFrame{
         };
 
         /*
-            Generating Numbers Panel
+            Generating Buttons Panel
          */
+
+        //Generating Numbers Panel
 
         buttons = generateButtons();
 
@@ -173,27 +177,55 @@ public class GUI extends JFrame{
         buttons.add(dot);
 
         for(JButton addy : buttons){
-            System.out.println(addy.getText());
             numPanel.add(addy);
         }
 
+        //Generating Operations Panel
+
         buttons = generateOperations();
         for(JButton addy : buttons){
-            System.out.println(addy.getText());
             opPanel.add(addy);
         }
 
-        cp.add(opPanel, BorderLayout.EAST);
-        cp.add(numPanel, BorderLayout.CENTER);
+        //Adding Equals Button to Panel
 
         JButton equals = new JButton("=");
         equals.setForeground(Color.WHITE);
         equals.setBackground(Color.DARK_GRAY);
         equals.setPreferredSize(new Dimension(300, 45));
         equals.addActionListener(actionEquals);
-        cp.add(equals, BorderLayout.SOUTH);
+
+        //Adding Panels to Buttons Panel
+
+        buttonsPanel.add(numPanel, BorderLayout.CENTER);
+        buttonsPanel.add(opPanel, BorderLayout.EAST);
+        buttonsPanel.add(equals, BorderLayout.SOUTH);
+
+        cp.add(buttonsPanel, BorderLayout.CENTER);
+
+        /*
+            Generating History Panel
+         */
+
+        log = new HistoryPanel();
+        log.setVisible(false);
+        cp.add(log, BorderLayout.EAST);
 
 
+        cp.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if(!log.isVisible() && e.getComponent().getWidth() > 500){
+                    log.setVisible(true);
+                    e.getComponent().getParent().revalidate();
+                }
+                else if(log.isVisible() && e.getComponent().getWidth() <= 500){
+                    log.setVisible(false);
+                    e.getComponent().getParent().revalidate();
+                }
+            }
+        });
+        this.pack();
 
     }
 
@@ -276,5 +308,4 @@ public class GUI extends JFrame{
 
         return toRet;
     }
-
 }

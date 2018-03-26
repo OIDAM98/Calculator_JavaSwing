@@ -20,6 +20,22 @@ public class Calculator {
         return getOperator(operation) != " ";
     }
 
+    public String[] returnFormattedExp(String op){
+        List<String> toRet = new ArrayList<>();
+        Scanner scan = new Scanner(op.trim());
+        String checking;
+        while (scan.hasNext()){
+            checking = scan.next();
+            if(isOperator(checking)){
+                toRet.add(checking);
+            }
+            else{
+                toRet.add(String.valueOf(Double.parseDouble(checking)));
+            }
+        }
+        return toRet.toArray(new String[toRet.size()]);
+    }
+
     private boolean isOperator(String operation){
         Matcher match = Pattern.compile(OPERATORS).matcher(operation);
         return match.matches();
