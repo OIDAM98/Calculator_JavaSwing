@@ -19,6 +19,7 @@ public class GUI extends JFrame{
     private static ActionListener actionNumbers;
     private static HashMap<Integer, String> opMap;
     private HistoryPanel log;
+    private boolean madeOp = false;
 
     public GUI(){
         setTitle("Calculator");
@@ -94,6 +95,10 @@ public class GUI extends JFrame{
         actionNumbers = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(operation.length() == 0 && madeOp){
+                    madeOp = false;
+                    numberStr = new StringBuilder();
+                }
                 JButton pressed = (JButton) e.getSource();
                 String text = pressed.getText();
                 numberStr.append(text);
@@ -119,7 +124,7 @@ public class GUI extends JFrame{
         ActionListener actionEquals = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(numberStr.length() != 0) {
+                if(numberStr.length() > 0) {
                     operation.append(numberStr);
                     numberStr = new StringBuilder();
                     if (!calculator.endsWithOperator(operation.toString())) {
@@ -130,7 +135,8 @@ public class GUI extends JFrame{
                             log.addOperation(calculator.returnFormattedExp(operation.toString()), Double.parseDouble(numberStr.toString()));
                             log.updateLog();
                             operation = new StringBuilder();
-                            numberStr = new StringBuilder();
+                            madeOp = true;
+                            //numberStr = new StringBuilder();
                         } catch (ArithmeticException ex) {
                             operation = new StringBuilder();
                             resultScreen.setText(ex.getMessage());

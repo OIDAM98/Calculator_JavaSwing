@@ -17,7 +17,7 @@ public class HistoryPanel extends JPanel{
         textLog = new JTextArea();
         textLog.setFont(new Font("Courier new", Font.ITALIC,20));
         textLog.setForeground(Color.WHITE);
-        textLog.setBackground(Color.BLACK);
+        textLog.setBackground(Color.DARK_GRAY);
         textLog.setEditable(false);
         textLog.setPreferredSize(new Dimension(300, 100));
 
