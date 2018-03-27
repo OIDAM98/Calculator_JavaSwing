@@ -67,7 +67,6 @@ public class Calculator {
         for (String num : numbersStr){
             numbers.push(Double.parseDouble(num));
         }
-        Collections.reverse(numbers);
         Scanner scan = new Scanner(operation);
         while (scan.hasNext()){
             String op = scan.next();
