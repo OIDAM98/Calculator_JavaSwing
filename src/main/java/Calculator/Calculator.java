@@ -51,40 +51,30 @@ public class Calculator {
         }
     }
 
-    private Stack<String> getOperators(String operation){
-        Matcher match = Pattern.compile(OPERATORS).matcher(operation);
-        Stack<String> toRet = new Stack<>();
-        while (match.find()){
-            toRet.push(match.group());
-        }
-        return toRet;
-    }
-
     public double makeOperation(String operation) throws IllegalArgumentException, ArithmeticException{
-        String[] numbersStr = operation.trim().split(OPERATORS);
         Stack<String> ops = new Stack<>();
         Stack<Double> numbers = new Stack<>();
-        for (String num : numbersStr){
-            numbers.push(Double.parseDouble(num));
-        }
-        Scanner scan = new Scanner(operation);
+        Scanner scan = new Scanner(operation.trim());
         while (scan.hasNext()){
-            String op = scan.next();
-            if(isOperator(op)){
-                while (!ops.empty() && hasPrecedence(op, ops.peek())){
+            String checking = scan.next();
+            if(isOperator(checking)) {
+                while (!ops.empty() && hasPrecedence(checking, ops.peek())) {
                     String precedenceOP = ops.pop();
-                    double n1 = numbers.pop();
                     double n2 = numbers.pop();
+                    double n1 = numbers.pop();
                     numbers.push(makeEvaluation(precedenceOP, n1, n2));
                 }
-                ops.push(op);
+                ops.push(checking);
+            }
+            else{
+                numbers.push(Double.parseDouble(checking));
             }
         }
 
         while (!ops.empty()) {
             String op = ops.pop();
-            double n1 = numbers.pop();
             double n2 = numbers.pop();
+            double n1 = numbers.pop();
             numbers.push(makeEvaluation(op, n1, n2));
         }
 
