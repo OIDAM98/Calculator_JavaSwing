@@ -3,10 +3,11 @@ package Calculator;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.math;
 
 public class Calculator {
 
-    private static final  String OPERATORS = ("[-+/*]");
+    private static final  String OPERATORS = ("[-+/*^]");
 
     public Calculator(){}
 
@@ -93,16 +94,18 @@ public class Calculator {
         switch (op) {
             case "+":
                 result = this.add(n1, n2);
-            break;
+                break;
             case "-":
                 result = this.subtract(n1, n2);
-            break;
+                break;
             case "*":
                 result = this.multiply(n1, n2);
-            break;
+                break;
             case "/":
                 result = this.divide(n1, n2);
                 break;
+            case "^":
+                result = this.exp(n1,n2);
             default:
                 break;
         }
@@ -140,6 +143,10 @@ public class Calculator {
 
     private double multiply(double n1, double n2){
         return n1 * n2;
+    }
+
+    private double exp(double n1, double n2){
+        return Math.exp(n1,n2);
     }
 
     private double divide(double n1, double n2) throws ArithmeticException{
